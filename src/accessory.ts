@@ -13,10 +13,8 @@ import { controlLock } from "./abode/api";
 
 export class AbodeLockAccessory {
 	public service: Service;
-	public batteryService: Service;
 
 	private LockCurrentState: CharacteristicValue;
-	private StatusLowBattery: CharacteristicValue;
 
 	constructor(private readonly platform: AbodeLocksPlatform, private readonly accessory: PlatformAccessory) {
 		this.accessory
@@ -41,15 +39,6 @@ export class AbodeLockAccessory {
 			.getCharacteristic(this.platform.Characteristic.LockTargetState)
 			.on(CharacteristicEventTypes.GET, this.getLockState.bind(this))
 			.on(CharacteristicEventTypes.SET, this.setLockState.bind(this));
-
-		this.batteryService =
-			this.accessory.getService(this.platform.Service.BatteryService) ||
-			this.accessory.addService(this.platform.Service.BatteryService);
-
-		this.batteryService
-			.getCharacteristic(this.platform.Characteristic.StatusLowBattery)
-			.on(CharacteristicEventTypes.GET, this.getLowBatteryStatus.bind(this))
-			.on(CharacteristicEventTypes.CHANGE, this.lowBatteryStatusChanged.bind(this));
 	}
 
 	getLockState(callback: CharacteristicGetCallback) {
@@ -84,17 +73,5 @@ export class AbodeLockAccessory {
 		this.platform.log.debug("lockStateChanged", this.accessory.context.device.id);
 
 		this.LockCurrentState = change.newValue;
-	}
-
-	getLowBatteryStatus(callback: CharacteristicGetCallback) {
-		this.platform.log.debug("getLowBatteryStatus", this.accessory.context.device.id);
-
-		callback(null, this.StatusLowBattery);
-	}
-
-	lowBatteryStatusChanged(change: CharacteristicChange) {
-		this.platform.log.debug("lowBatteryStatusChanged", this.accessory.context.device.id);
-
-		this.StatusLowBattery = change.newValue;
 	}
 }

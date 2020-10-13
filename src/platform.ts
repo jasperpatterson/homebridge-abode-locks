@@ -149,16 +149,6 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				const currentState = this.convertAbodeLockStatusToLockCurrentState(device);
 
 				service.getCharacteristic(this.Characteristic.LockCurrentState).updateValue(currentState);
-
-				const batteryService = accessory.getService(this.Service.BatteryService);
-				if (!batteryService) {
-					this.log.warn("updateStatus did not find battery service for device", id);
-					continue;
-				}
-
-				const batteryStatus = this.convertAbodeBatteryIntToStatusLowBattery(device.faults.low_battery);
-
-				service.getCharacteristic(this.Characteristic.StatusLowBattery).updateValue(batteryStatus);
 			}
 		} catch (error) {
 			this.log.error("Failed to updateStatus", error.message);
@@ -216,15 +206,6 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				return AbodeLockStatusInt.Locked;
 			default:
 				throw new Error(`Unexpected LockTargetState: ${value}`);
-		}
-	}
-
-	convertAbodeBatteryIntToStatusLowBattery(status: number): CharacteristicValue {
-		switch (status) {
-			case 1:
-				return this.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
-			default:
-				return this.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL;
 		}
 	}
 }
