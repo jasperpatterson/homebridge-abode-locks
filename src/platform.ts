@@ -35,7 +35,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 	private socketConnected = false;
 
 	constructor(public readonly log: Logger, public readonly config: Config, public readonly api: API) {
-		this.log.debug("Finished initializing platform:", this.config.name);
+		this.log.debug("Finished initializing AbodeLocksPlatform");
 
 		this.api.on("didFinishLaunching", async () => {
 			log.debug("Executed didFinishLaunching callback");
