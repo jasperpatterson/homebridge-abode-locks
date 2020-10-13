@@ -21,9 +21,10 @@ export class AbodeLockAccessory {
 	constructor(private readonly platform: AbodeLocksPlatform, private readonly accessory: PlatformAccessory) {
 		this.accessory
 			.getService(this.platform.Service.AccessoryInformation)!
-			.setCharacteristic(this.platform.Characteristic.Manufacturer, "Abode")
+			.setCharacteristic(this.platform.Characteristic.Manufacturer, "abode")
 			.setCharacteristic(this.platform.Characteristic.Model, "Door Lock")
 			.setCharacteristic(this.platform.Characteristic.SerialNumber, accessory.context.device.id)
+			.setCharacteristic(this.platform.Characteristic.FirmwareRevision, accessory.context.device.version)
 			.setCharacteristic(this.platform.Characteristic.AppMatchingIdentifier, "com.abode.abode");
 
 		this.service =

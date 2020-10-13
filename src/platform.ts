@@ -87,6 +87,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 						existingAccessory.context.device = {
 							id: device.id,
 							name: device.name,
+							version: device.version,
 						};
 						new AbodeLockAccessory(this, existingAccessory);
 
@@ -102,6 +103,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 					accessory.context.device = {
 						id: device.id,
 						name: device.name,
+						version: device.version,
 					};
 
 					new AbodeLockAccessory(this, accessory);
