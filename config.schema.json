@@ -1,0 +1,21 @@
+{
+	"pluginAlias": "AbodeLocks",
+	"pluginType": "platform",
+	"singular": true,
+	"schema": {
+		"type": "object",
+		"properties": {
+			"email": {
+				"title": "Email",
+				"type": "string",
+				"required": true,
+				"description": "Abode account"
+			},
+			"password": {
+				"title": "Password",
+				"type": "string",
+				"required": true
+			}
+		}
+	}
+}
