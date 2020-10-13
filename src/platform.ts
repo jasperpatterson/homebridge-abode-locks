@@ -47,6 +47,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				email: config.email,
 				password: config.password,
 				logger: log,
+				homebridgeVersion: api.serverVersion,
 			});
 
 			await this.discoverDevices();

@@ -14,12 +14,17 @@ export interface AbodeInit {
 	readonly email: string;
 	readonly password: string;
 	readonly logger: Logger;
+	readonly homebridgeVersion: string;
 }
 
 export const abodeInit = async (data: AbodeInit) => {
 	credentials.email = data.email;
 	credentials.password = data.password;
 	log = data.logger;
+	if (data.homebridgeVersion) {
+		USER_AGENT = `${USER_AGENT_BASE}/${data.homebridgeVersion}`;
+	}
+
 	await session();
 	openSocket();
 };
@@ -43,8 +48,10 @@ export const getAuthCookie = (): string => {
 };
 
 export const API_BASE_URL = "https://my.goabode.com";
-export const USER_AGENT = "Homebridge";
+export const USER_AGENT_BASE = "Homebridge";
 export const ORIGIN = "https://my.goabode.com/";
+
+export let USER_AGENT = USER_AGENT_BASE;
 
 http.interceptors.request.use(
 	(config) => {
