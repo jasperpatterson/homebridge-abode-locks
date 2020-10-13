@@ -1,7 +1,7 @@
 {
 	"name": "homebridge-abode-locks",
-	"version": "0.0.1",
-	"description": "Homebridge plugin for Abode locks.",
+	"version": "1.0.0",
+	"description": "Homebridge plugin for integrating Abode door locks into HomeKit.",
 	"author": "Jasper Patterson",
 	"license": "MIT",
 	"main": "dist/index.js",
@@ -15,6 +15,10 @@
 	"keywords": [
 		"homebridge-plugin"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jasperpatterson/homebridge-abode-locks.git"
+	},
 	"devDependencies": {
 		"@types/node": "^14.11.8",
 		"@types/uuid": "^8.3.0",
