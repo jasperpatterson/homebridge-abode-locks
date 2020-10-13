@@ -2,6 +2,7 @@ import { AbodeEventType, ORIGIN, USER_AGENT, getAuthCookie, session } from "./ap
 
 import { EventEmitter } from "events";
 import WebSocket from "ws";
+import { log } from "./api";
 
 export const AbodeEvents = new EventEmitter();
 export const DEVICE_UPDATED = "device_updated";
@@ -72,8 +73,8 @@ export const openSocket = (): void => {
 			const message = JSON.parse(messageJson);
 
 			processEvent(message);
-		} catch (_error) {
-			// Do nothing
+		} catch (error) {
+			log.debug("Failed to parse message", error.message);
 		}
 	});
 };

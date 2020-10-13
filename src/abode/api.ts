@@ -1,14 +1,27 @@
+import { Logger } from "homebridge";
 import { default as http } from "axios";
+import { openSocket } from "./events";
 import { v4 as uuid } from "uuid";
+
+export let log: Logger;
 
 const credentials = {
 	email: "",
 	password: "",
 };
 
-export const setCredentials = (email: string, password: string): void => {
-	credentials.email = email;
-	credentials.password = password;
+export interface AbodeInit {
+	readonly email: string;
+	readonly password: string;
+	readonly logger: Logger;
+}
+
+export const abodeInit = async (data: AbodeInit) => {
+	credentials.email = data.email;
+	credentials.password = data.password;
+	log = data.logger;
+	await session();
+	openSocket();
 };
 
 const DEVICE_UUID = uuid();
@@ -68,9 +81,11 @@ http.interceptors.request.use(
 
 export const session = async (): Promise<void> => {
 	try {
+		log.debug("Getting Abode session");
 		const oauthToken = await getOAuthToken();
 		auth.oauthToken = oauthToken;
 	} catch (_error) {
+		log.debug("No session, re-signing in");
 		await performAuth();
 	}
 };
@@ -82,6 +97,8 @@ const performAuth = async (): Promise<void> => {
 		}
 
 		clearAuth();
+
+		log.info("Signing into Abode account");
 
 		const authResponse = await http.post("/api/auth2/login", {
 			id: credentials.email,
@@ -110,6 +127,7 @@ const performAuth = async (): Promise<void> => {
 		const oauthToken = await getOAuthToken();
 		auth.oauthToken = oauthToken;
 	} catch (error) {
+		log.error("Failed to sign into Abode account", error.message);
 		throw new Error(`Failed to performAuth: ${error.message}`);
 	}
 };
@@ -160,6 +178,7 @@ export interface AbodeLockDevice extends AbodeDevice {
 }
 
 export const getDevices = async (): Promise<AbodeDevice[]> => {
+	log.debug("getDevices");
 	await session();
 	const response = await http.get("/api/v1/devices");
 	return response.data;
@@ -171,6 +190,7 @@ export interface AbodeControlLockResponse {
 }
 
 export const controlLock = async (id: string, status: AbodeLockStatusInt): Promise<AbodeControlLockResponse> => {
+	log.debug("controlLock", id, status);
 	await session();
 	const response = await http.put(`/api/v1/control/lock/${id}`, { status });
 	return response.data;

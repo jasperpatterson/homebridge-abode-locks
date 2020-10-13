@@ -8,14 +8,14 @@ import {
 	PlatformConfig,
 	Service,
 } from "homebridge";
-import { AbodeEvents, DEVICE_UPDATED, SOCKET_CONNECTED, SOCKET_DISCONNECTED, openSocket } from "./abode/events";
+import { AbodeEvents, DEVICE_UPDATED, SOCKET_CONNECTED, SOCKET_DISCONNECTED } from "./abode/events";
 import {
 	AbodeLockDevice,
 	AbodeLockStatus,
 	AbodeLockStatusInt,
+	abodeInit,
 	getDevices,
 	isDeviceTypeLock,
-	setCredentials,
 } from "./abode/api";
 import { PLATFORM_NAME, PLUGIN_NAME } from "./constants";
 
@@ -43,12 +43,14 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				return;
 			}
 
-			setCredentials(config.email, config.password);
+			abodeInit({
+				email: config.email,
+				password: config.password,
+				logger: log,
+			});
 
 			await this.discoverDevices();
 			await this.updateStatus();
-
-			openSocket();
 
 			AbodeEvents.on(SOCKET_CONNECTED, () => {
 				log.debug("Socket connected");
