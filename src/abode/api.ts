@@ -27,6 +27,8 @@ export const abodeInit = async (data: AbodeInit) => {
 
 	await performAuth();
 	openSocket();
+
+	setInterval(renewSession, 1500000);
 };
 
 const DEVICE_UUID = uuid();
@@ -58,6 +60,7 @@ http.interceptors.request.use(
 		if (!config.url) throw new Error("Missing URL.");
 
 		const isAuthPath = config.url.startsWith("/api/auth2/");
+		const isSessionPath = config.url === "/api/v1/session";
 		config.url = API_BASE_URL + config.url;
 
 		config.headers["User-Agent"] = USER_AGENT;
@@ -65,19 +68,22 @@ http.interceptors.request.use(
 
 		if (isAuthPath) return config;
 
+		config.headers["ABODE-API-KEY"] = auth.apiKey;
+
 		if (!auth.session) {
 			throw new Error("Missing session.");
 		}
 		if (!auth.apiKey) {
 			throw new Error("Missing API key.");
 		}
+
+		if (isSessionPath) return config;
+
 		if (!auth.oauthToken) {
 			throw new Error("Missing OAuth token.");
 		}
 
 		config.headers["Authorization"] = `Bearer ${auth.oauthToken}`;
-		config.headers["ABODE-API-KEY"] = auth.apiKey;
-		config.headers["Cookie"] = getAuthCookie();
 
 		return config;
 	},
@@ -86,13 +92,17 @@ http.interceptors.request.use(
 	},
 );
 
-export const session = async (): Promise<void> => {
+export const renewSession = async (): Promise<void> => {
 	try {
 		log.debug("Getting Abode session");
+
+		const session = await getSession();
+		if (session) auth.session = session;
+
 		const oauthToken = await getOAuthToken();
-		auth.oauthToken = oauthToken;
-	} catch (_error) {
-		log.debug("No session, re-signing in");
+		if (oauthToken) auth.oauthToken = oauthToken;
+	} catch (error) {
+		log.debug("No session, re-signing in", error);
 		await performAuth();
 	}
 };
@@ -139,7 +149,7 @@ const performAuth = async (): Promise<void> => {
 	}
 };
 
-const getOAuthToken = async () => {
+const getOAuthToken = async (): Promise<string> => {
 	const claimsResponse = await http.get("/api/auth2/claims");
 	if (claimsResponse.status !== 200) {
 		throw new Error("Received non-200 response.");
@@ -151,6 +161,14 @@ const getOAuthToken = async () => {
 	}
 
 	return oauthToken;
+};
+
+const getSession = async (): Promise<string> => {
+	const sessionResponse = await http.get("/api/v1/session");
+	if (sessionResponse.status !== 200) {
+		throw new Error("Received non-200 response.");
+	}
+	return sessionResponse.data.id;
 };
 
 export const enum AbodeDeviceType {
@@ -186,7 +204,6 @@ export interface AbodeLockDevice extends AbodeDevice {
 
 export const getDevices = async (): Promise<AbodeDevice[]> => {
 	log.debug("getDevices");
-	await session();
 	const response = await http.get("/api/v1/devices");
 	return response.data;
 };
@@ -198,7 +215,6 @@ export interface AbodeControlLockResponse {
 
 export const controlLock = async (id: string, status: AbodeLockStatusInt): Promise<AbodeControlLockResponse> => {
 	log.debug("controlLock", id, status);
-	await session();
 	const response = await http.put(`/api/v1/control/lock/${id}`, { status });
 	return response.data;
 };

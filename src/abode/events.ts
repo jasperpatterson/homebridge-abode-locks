@@ -1,4 +1,4 @@
-import { AbodeEventType, ORIGIN, USER_AGENT, getAuthCookie, session } from "./api";
+import { AbodeEventType, ORIGIN, USER_AGENT, getAuthCookie, renewSession } from "./api";
 
 import { EventEmitter } from "events";
 import WebSocket from "ws";
@@ -83,7 +83,7 @@ const reopenWaitStart = 1000;
 let reopenWait = reopenWaitStart;
 const reopenSocket = () => {
 	setTimeout(async () => {
-		await session();
+		await renewSession();
 		openSocket();
 	}, reopenWait);
 	reopenWait = reopenWait * 2;
