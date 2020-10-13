@@ -8,9 +8,9 @@ _This is an unofficial integration not created by or affiliated with Abode Syste
 
 If you are new to Homebridge, please first read the Homebridge [documentation](https://github.com/homebridge/homebridge/wiki) and installation instructions first.
 
-If you have [Homebridge Config UI](https://github.com/oznu/homebridge-config-ui-x) installed, you can intsall this plugin by going to the `Plugins` tab, searching for `homebridge-abode-locks`, and installing it.
+If you have [Homebridge Config UI](https://github.com/oznu/homebridge-config-ui-x) installed, you can install this plugin by going to the `Plugins` tab, searching for `homebridge-abode-locks`, and installing it.
 
-If you prefer use command line, you can do so by running:
+If you prefer use the command line, you can do so by running:
 
 ```sh
 npm install -g homebridge-abode-locks
@@ -18,7 +18,7 @@ npm install -g homebridge-abode-locks
 
 ## Plugin configuration
 
-To configure the plugin, enter the email and password for your Abode account. You may want to use a dedicated Abode user just for Homebridge.
+To configure this plugin, enter the email and password for your Abode account. You may want to use a dedicated Abode user just for Homebridge.
 
 If you choose to configure this plugin directly instead of using Homebridge Config UI, you'll need to add the platform to your `config.json` file:
 
