@@ -68,6 +68,13 @@ export class AbodeLockAccessory {
 			await controlLock(this.accessory.context.device.id, status);
 
 			callback();
+
+			setTimeout(() => {
+				if (status !== this.LockCurrentState) {
+					this.platform.log.debug("LockCurrentState does not match, force updating");
+					this.platform.updateStatus();
+				}
+			}, 15000);
 		} catch (error) {
 			this.platform.log.error("setLockState failed", error.message);
 			callback(error);

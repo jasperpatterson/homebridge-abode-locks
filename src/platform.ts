@@ -32,6 +32,8 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 
 	public readonly accessories: PlatformAccessory[] = [];
 
+	private socketConnected = false;
+
 	constructor(public readonly log: Logger, public readonly config: Config, public readonly api: API) {
 		this.log.debug("Finished initializing platform:", this.config.name);
 
@@ -54,10 +56,17 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 			await this.updateStatus();
 
 			AbodeEvents.on(SOCKET_CONNECTED, () => {
+				this.socketConnected = true;
 				log.debug("Socket connected");
 			});
 			AbodeEvents.on(SOCKET_DISCONNECTED, () => {
+				this.socketConnected = false;
 				log.debug("Socket disconnected");
+				setTimeout(() => {
+					if (!this.socketConnected) {
+						this.setStatusUnknown();
+					}
+				}, 30000);
 			});
 			AbodeEvents.on(DEVICE_UPDATED, this.handleDeviceUpdated.bind(this));
 		});
@@ -155,6 +164,25 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 			}
 		} catch (error) {
 			this.log.error("Failed to updateStatus", error.message);
+			this.setStatusUnknown();
+		}
+	}
+
+	setStatusUnknown() {
+		try {
+			for (const accessory of this.accessories) {
+				const service = accessory.getService(this.Service.LockMechanism);
+				if (!service) {
+					this.log.warn("updateStatus did not find lock service for device", accessory.context.device.id);
+					continue;
+				}
+
+				service
+					.getCharacteristic(this.Characteristic.LockCurrentState)
+					.updateValue(this.Characteristic.LockCurrentState.UNKNOWN);
+			}
+		} catch (error) {
+			this.log.error("Failed to handleUnresponsive", error.message);
 		}
 	}
 
