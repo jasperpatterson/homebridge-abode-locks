@@ -161,7 +161,6 @@ export interface AbodeDevice {
 	readonly id: string;
 	readonly type_tag: AbodeDeviceType;
 	readonly name: string;
-	readonly version: string;
 }
 
 export const enum AbodeLockStatus {

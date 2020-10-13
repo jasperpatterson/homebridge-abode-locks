@@ -24,7 +24,6 @@ export class AbodeLockAccessory {
 			.setCharacteristic(this.platform.Characteristic.Manufacturer, "abode")
 			.setCharacteristic(this.platform.Characteristic.Model, "Door Lock")
 			.setCharacteristic(this.platform.Characteristic.SerialNumber, accessory.context.device.id)
-			.setCharacteristic(this.platform.Characteristic.FirmwareRevision, accessory.context.device.version)
 			.setCharacteristic(this.platform.Characteristic.AppMatchingIdentifier, "com.abode.abode");
 
 		this.service =
