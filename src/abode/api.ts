@@ -25,7 +25,7 @@ export const abodeInit = async (data: AbodeInit) => {
 		USER_AGENT = `${USER_AGENT_BASE}/${data.homebridgeVersion}`;
 	}
 
-	await session();
+	await performAuth();
 	openSocket();
 };
 
