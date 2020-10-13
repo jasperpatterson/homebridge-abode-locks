@@ -45,7 +45,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				return;
 			}
 
-			abodeInit({
+			await abodeInit({
 				email: config.email,
 				password: config.password,
 				logger: log,
