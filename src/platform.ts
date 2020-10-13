@@ -41,7 +41,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 			log.debug("Executed didFinishLaunching callback");
 
 			if (!config.email || !config.password) {
-				this.log.debug("Missing email or password.");
+				this.log.error("Missing email or password.");
 				return;
 			}
 
