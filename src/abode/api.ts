@@ -144,8 +144,8 @@ const performAuth = async (): Promise<void> => {
 		const oauthToken = await getOAuthToken();
 		auth.oauthToken = oauthToken;
 	} catch (error) {
-		log.error("Failed to sign into Abode account", error.message);
-		throw new Error(`Failed to performAuth: ${error.message}`);
+		log.error("Failed to performAuth:", error.message);
+		throw new Error("Failed to sign into Abode account");
 	}
 };
 

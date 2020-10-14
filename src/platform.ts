@@ -40,17 +40,21 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 		this.api.on("didFinishLaunching", async () => {
 			log.debug("Executed didFinishLaunching callback");
 
-			if (!config.email || !config.password) {
-				this.log.error("Missing email or password.");
+			try {
+				if (!config.email || !config.password) {
+					throw new Error("Missing email and password");
+				}
+
+				await abodeInit({
+					email: config.email,
+					password: config.password,
+					logger: log,
+					homebridgeVersion: api.serverVersion,
+				});
+			} catch (error) {
+				log.error("Failed to initialize:", error.message);
 				return;
 			}
-
-			await abodeInit({
-				email: config.email,
-				password: config.password,
-				logger: log,
-				homebridgeVersion: api.serverVersion,
-			});
 
 			await this.discoverDevices();
 			await this.updateStatus();
