@@ -103,7 +103,11 @@ export const renewSession = async (): Promise<void> => {
 		if (oauthToken) auth.oauthToken = oauthToken;
 	} catch (error) {
 		log.debug("No session, re-signing in", error);
-		await performAuth();
+		try {
+			await performAuth();
+		} catch (_error) {
+			log.debug("Failed to renew session");
+		}
 	}
 };
 
