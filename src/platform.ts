@@ -153,6 +153,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 				const currentState = this.convertAbodeLockStatusToLockCurrentState(device);
 
 				service.getCharacteristic(this.Characteristic.LockCurrentState).updateValue(currentState);
+				service.getCharacteristic(this.Characteristic.LockTargetState).updateValue(currentState);
 			}
 		} catch (error) {
 			this.log.error("Failed to updateStatus", error.message);
