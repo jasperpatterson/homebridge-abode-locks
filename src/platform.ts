@@ -120,6 +120,7 @@ export class AbodeLocksPlatform implements DynamicPlatformPlugin {
 					new AbodeLockAccessory(this, accessory);
 
 					this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+					this.accessories.push(accessory);
 				}
 			}
 		} catch (error) {

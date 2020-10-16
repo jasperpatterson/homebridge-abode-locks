@@ -1,6 +1,6 @@
 {
 	"name": "homebridge-abode-locks",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Homebridge plugin for integrating Abode door locks into HomeKit.",
 	"author": "Jasper Patterson",
 	"license": "MIT",
