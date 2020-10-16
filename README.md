@@ -24,7 +24,7 @@ If you choose to configure this plugin directly instead of using Homebridge Conf
 
 ```json
 {
-	"platform": "AbodeLocks",
+	"platform": "Abode Locks",
 	"email": "YOUR_ABODE_ACCOUNT_EMAIL",
 	"password": "YOUR_ABODE_ACCOUNT_PASSWORD"
 }
