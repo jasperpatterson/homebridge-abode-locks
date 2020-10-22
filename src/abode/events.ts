@@ -83,8 +83,12 @@ const reopenWaitStart = 1000;
 let reopenWait = reopenWaitStart;
 const reopenSocket = () => {
 	setTimeout(async () => {
-		await renewSession();
-		openSocket();
+		try {
+			await renewSession();
+			openSocket();
+		} catch (error) {
+			log.debug("Failed to reopenSocket", error.message);
+		}
 	}, reopenWait);
 	reopenWait = reopenWait * 2;
 };
