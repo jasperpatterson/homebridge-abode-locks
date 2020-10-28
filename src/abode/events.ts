@@ -77,6 +77,10 @@ export const openSocket = (): void => {
 			log.debug("Failed to parse message", error.message);
 		}
 	});
+
+	ws.on("error", (error) => {
+		log.debug("WebSocket error", error.message);
+	});
 };
 
 const reopenWaitStart = 1000;
